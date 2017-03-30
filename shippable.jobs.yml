@@ -1,0 +1,24 @@
+jobs:
+  - name: sample-eb-deploy_runCI
+    type: runCI
+    steps:
+      - OUT: app-version
+    on_success:
+      - script: echo 'on success !!!!!'
+    on_failure:
+      - script: echo 'Failed job .... :('
+
+  - name: eb-deploy-master
+    type: runCLI
+    steps:
+      - IN: master-branch
+        switch: off
+      - IN: aws-eb-bits
+      - IN: app-version
+      - TASK:
+        - script: printenv
+        - script: ./IN/master-branch/gitRepo/build.sh
+    on_success:
+      - script: echo 'on success !!!!!'
+    on_failure:
+      - script: echo 'Failed job .... :('
